@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>추천 상점</title>
+    <style>
+        body {
+            font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+            background: #23243a;
+            color: #fff;
+            margin: 0;
+            min-height: 100vh;
+        }
+        h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin: 36px 0 24px 0;
+            font-weight: bold;
+        }
+        .detail-btn {
+      		display: inline-block;
+      		padding: 6px 12px;
+      		background-color: #00bfff;  /* 밝은 하늘색 */
+     		 color: white;
+     		 font-weight: bold;
+      		text-decoration: none;
+      		border-radius: 6px;
+      		transition: background-color 0.2s, transform 0.1s;
+    	}
+    	.detail-btn:hover {
+      		background-color: #1e90ff;  /* 호버 시 진한 하늘색 */
+      		text-decoration: underline;
+      		transform: scale(1.05);     /* 살짝 확대 효과 */
+    	}
+    	.shop-actions {
+      		text-align: center;
+      		margin-top: 10px;
+    	}
+        .back-btn {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+        .back-btn button {
+            background: #ff914d;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 12px 32px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .back-btn button:hover {
+            background: #ff7a26;
+        }
+        .shop-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px 22px;
+            max-width: 950px;
+            margin: 0 auto 48px auto;
+            padding: 0 12px;
+        }
+        .shop-card {
+            display: flex;
+            flex-direction: column;
+            background: #2e2f47;
+            border-radius: 20px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.11);
+            padding: 18px 18px 20px 18px;
+            transition: box-shadow 0.2s;
+            align-items: center;
+        }
+        .shop-card:hover {
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+        }
+        .shop-card img {
+            width: 240px;
+            height: 170px;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 1px solid #414255;
+            background: #212136;
+            margin-bottom: 15px;
+        }
+        .shop-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ff914d;
+            margin: 0 0 3px 0;
+            text-align: center;
+        }
+        .shop-address {
+            color: #bcbcc7;
+            font-size: 1.02rem;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .shop-rating {
+            font-size: 1.09rem;
+            color: #ffd46b;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .shop-actions {
+            margin-top: 6px;
+            text-align: center;
+        }
+        .shop-actions button {
+            background: #24253a;
+            color: #ff914d;
+            border: 1px solid #ff914d;
+            border-radius: 16px;
+            padding: 7px 28px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.13s, color 0.13s;
+        }
+        .shop-actions button:hover {
+            background: #ff914d;
+            color: #fff;
+        }
+        @media (max-width: 900px) {
+            .shop-list { grid-template-columns: 1fr; }
+            .shop-card img { width: 100%; height: 170px; }
+        }
+        @media (max-width: 600px) {
+            .shop-list { grid-template-columns: 1fr; }
+            .shop-card img { width: 100%; height: 130px; }
+            .shop-card { padding: 13px 7px; }
+        }.logout-form {
+    position: fixed;
+    top: 24px;
+    right: 34px;
+    z-index: 100;
+    margin: 0;
+}
+.logout-btn {
+    background: #ffd6a0;
+    color: #ff914d;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 28px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    transition: background 0.18s, color 0.18s;
+}
+.logout-btn:hover {
+    background: #ff914d;
+    color: #fff;
+}
+    </style>
+</head>
+<body>
+<div th:if="${session.loginUser != null}">
+	<form th:action="@{/logout}" method="get" class="logout-form">
+        <button type="submit" class="logout-btn">로그아웃</button>
+    </form>
+    </div>
+    <div th:if="${session.loginUser == null}">
+    <form th:action="@{/login}" method="get" class="logout-form">
+        <button type="submit" class="logout-btn">로그인</button>
+    </form>
+</div>
+    <h2>추천 상점</h2>
+    <div class="back-btn">
+        <a href="/main">
+            <button>다시 추천받기</button>
+        </a>
+    </div>
+    <div th:if="${#lists.isEmpty(shopList)}">
+        <p style="text-align:center;color:#aaa;">추천된 상점이 없습니다.</p>
+    </div>
+    <div class="shop-list">
+        <div th:each="shop : ${shopList}" class="shop-card">
+            <img th:src="${shop.imageUrl}" alt="이미지" />
+            <div class="shop-name" th:text="${shop.name}"></div>
+            <div class="shop-address" th:text="${shop.address}"></div>
+            <div class="shop-rating" th:if="${shop.rating != null}" th:text="'★ ' + ${shop.rating}"></div>
+            <div class="shop-actions">
+                <a th:href="@{/store/{id}(id=${shop.id})}" class = "detail-btn">상세보기</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

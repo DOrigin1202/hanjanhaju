@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>찜한 장소</title>
+  <!-- ★★★ CSS 경로를 @{...} 문법으로 수정 ★★★ -->
+  <link rel="stylesheet" th:href="@{/css/mywishlist.css}" />
+  <!-- ★★★ 불필요한 wishlist.js 링크는 완전히 삭제했습니다. ★★★ -->
+</head>
+<body>
+  <header>
+    <div class="back-btn" th:onclick="|location.href='@{/mypage}'|">←</div>
+    찜한 장소
+  </header>
+  <h1>내가 찜한 술집</h1>
+
+  <div id="place-list">
+    <!-- 찜 목록이 비어있지 않은 경우 -->
+    <div th:if="${!#lists.isEmpty(wishlistedStores)}">
+      <!-- th:each를 사용하여 찜한 가게 목록을 반복 출력 -->
+      <div class="place" th:each="store : ${wishlistedStores}">
+        <h5 th:text="${store.shopName}">가게 이름</h5>
+        <p th:text="${store.storeLocation}">가게 위치</p>
+        
+        <!-- 찜 취소 버튼 -->
+        <form th:action="@{/wishlist/remove}" method="post" style="display: inline;">
+            <input type="hidden" name="storeId" th:value="${store.storeId}" />
+            <button type="submit">찜 취소</button>
+        </form>
+        <!-- 상세 보기 링크 -->
+        <a th:href="@{/store/{id}(id=${store.storeId})}">상세 보기</a>
+      </div>
+    </div>
+
+    <!-- 찜 목록이 비어있는 경우 -->
+    <div th:if="${#lists.isEmpty(wishlistedStores)}">
+      <p>아직 찜한 장소가 없습니다. 마음에 드는 술집을 찜해보세요!</p>
+    </div>
+  </div>
+
+  <div class="loading" id="loading" style="display: none;">불러오는 중...</div>
+
+  
+</body>
+</html>

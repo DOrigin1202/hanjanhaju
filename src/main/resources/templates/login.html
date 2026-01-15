@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>로그인 - 한잔하주(酒)</title>
+    <style>
+      :root {
+        --bg-color: #1d1c2b;
+        --input-bg: #3a3946;
+        --placeholder: #aaa;
+        --button-color: #ff914d;
+        --button-hover: #ff7a26;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background-color: var(--bg-color);
+        font-family: "Pretendard", "Noto Sans KR", sans-serif;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding: 20px;
+      }
+
+      .login-container {
+        width: 100%;
+        max-width: 360px;
+        text-align: center;
+      }
+
+      .logo-img {
+        width: 200px;
+        height: 200px;
+      }
+
+      .title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+        color: #ccc;
+        margin-bottom: 30px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      input[type="email"],
+      input[type="password"] {
+        padding: 14px;
+        border-radius: 16px;
+        border: none;
+        font-size: 1rem;
+        background-color: var(--input-bg);
+        color: white;
+      }
+
+      input::placeholder {
+        color: var(--placeholder);
+      }
+
+      button {
+        margin-top: 10px;
+        background-color: var(--button-color);
+        color: white;
+        padding: 14px;
+        font-size: 1rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      button:hover {
+        background-color: var(--button-hover);
+      }
+
+      .links {
+        margin-top: 15px;
+        font-size: 0.85rem;
+        color: #bbb;
+      }
+
+      .links a {
+        color: #bbb;
+        text-decoration: underline;
+        margin: 0 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <img
+        src="./images/한잔하주_logochar(흰색).png"
+        alt="한잔하주 로고"
+        class="logo-img"
+      />
+      <div class="title">한잔하주(酒)</div>
+      <div class="subtitle">감정을 마시다, 분위기를 느끼다</div>
+
+      <form th:action="@{/login}" method="post">
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Email *"
+          required
+        />
+        <input
+          type="password"
+          id="password"
+          name="pw"
+          placeholder="Password *"
+          required
+        />
+        <button type="submit">로그인</button>
+      </form>
+
+      <div class="links">
+        <a th:href="find">이메일/비밀번호 찾기</a>|
+        <a th:href="register">회원가입 하기</a>
+      </div>
+    </div>
+
+    
+   
+  </body>
+</html>

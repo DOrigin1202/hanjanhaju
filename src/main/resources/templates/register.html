@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>회원가입 - 한잔하주(酒)</title>
+  <link rel="stylesheet" th:href="@{/css/register.css}" />
+  <style>
+    :root {
+      --bg-color: #1d1c2b;
+      --input-bg: #3a3946;
+      --placeholder: #aaa;
+      --button-color: #ff914d;
+      --button-hover: #ff7a26;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background-color: var(--bg-color);
+      font-family: "Pretendard", "Noto Sans KR", sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+    }
+    .signup-container {
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+    }
+    .logo-img {
+      width: 200px;
+      height: 200px;
+    }
+    .title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      font-size: 1rem;
+      color: #ccc;
+      margin-bottom: 30px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .input-group {
+      display: flex;
+      gap: 8px;
+    }
+    .input-group input { flex: 1; }
+    input[type="email"], input[type="password"], input[type="date"], input[type="text"], select {
+      padding: 14px;
+      border-radius: 16px;
+      border: none;
+      font-size: 1rem;
+      background-color: var(--input-bg);
+      color: white;
+    }
+    input::placeholder { color: var(--placeholder); }
+    button, .check-btn {
+      background-color: var(--button-color);
+      color: white;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .check-btn {
+      padding: 0 12px;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    button:hover { background-color: var(--button-hover); }
+    .back {
+      margin-top: 15px;
+      font-size: 0.85rem;
+      color: #bbb;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .gender-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .gender-group input[type="radio"] { display: none; }
+    .gender-option {
+      flex: 1;
+      padding: 14px;
+      border-radius: 16px;
+      background-color: var(--input-bg);
+      color: white;
+      font-size: 1rem;
+      text-align: center;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    .gender-group input[type="radio"]:checked + .gender-option {
+      border: 2px solid var(--button-color);
+      background-color: #4a4859;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <img th:src="@{/images/한잔하주_logochar(흰색).png}" alt="로고" class="logo-img" />
+    <div class="title">한잔하주(酒)</div>
+    <div class="subtitle">감정을 마시다, 분위기를 느끼다</div>
+
+    <form th:action="@{/register}" method="post" onsubmit="return validateForm();">
+      <div class="input-group">
+        <input type="email" id="email" name="email" placeholder="Email *" required />
+        <button type="button" class="check-btn" onclick="checkDuplicate('email')">중복확인</button>
+      </div>
+      <input type="password" id="password" name="pw" placeholder="Password *" required />
+      <input type="password" id="repeat-password" name="pwConfirm" placeholder="Repeat Password *" required />
+
+      <div class="input-group">
+        <input type="text" id="nickname" name="nickname" placeholder="Nickname *" required />
+        <button type="button" class="check-btn" onclick="checkDuplicate('nickname')">중복확인</button>
+      </div>
+
+      <div class="gender-group">
+        <input type="radio" id="male" name="gender" value="M" required />
+        <label for="male" class="gender-option">남성</label>
+        <input type="radio" id="female" name="gender" value="F" required />
+        <label for="female" class="gender-option">여성</label>
+      </div>
+
+      <input type="date" id="birth" name="birthdate" required />
+      <select name="age" required>
+        <option value="">연령대 선택 *</option>
+        <option value="10">10대</option>
+        <option value="20">20대</option>
+        <option value="30">30대</option>
+        <option value="40">40대</option>
+        <option value="50">50대 이상</option>
+      </select>
+
+      <button type="submit">가입하기</button>
+    </form>
+
+    <a th:href="@{/start}" class="back">시작화면으로 돌아가기</a>
+  </div>
+
+  <!-- thymeleaf 템플릿 안에서 javascript 사용할 경우 -->
+<script th:inline="javascript">
+  function checkDuplicate(type) {
+    const value = document.getElementById(type).value;
+    if (!value) {
+      alert(type === 'email' ? '이메일을 입력해주세요.' : '닉네임을 입력해주세요.');
+      return;
+    }
+
+    // API 호출 주소는 Spring Controller와 매핑되어 있어야 함!
+    fetch('/api/check-' + type + '?value=' + encodeURIComponent(value))
+      .then(response => response.json())
+      .then(data => {
+        if (data.duplicate) {
+          alert((type === 'email' ? '이메일' : '닉네임') + '이 이미 사용 중입니다.');
+        } else {
+          alert('사용 가능한 ' + (type === 'email' ? '이메일' : '닉네임') + '입니다.');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        alert('중복 확인 중 오류가 발생했습니다.');
+      });
+  }
+
+  function validateForm() {
+    const pw = document.getElementById("password").value;
+    const pwConfirm = document.getElementById("repeat-password").value;
+
+    if (pw !== pwConfirm) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return false;
+    }
+    return true;
+  }
+</script>
+
+</body>
+</html>

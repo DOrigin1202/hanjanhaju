@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>한잔하酒 키워드 선택</title>
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body th:with="loginUser=${session.loginUser}">
+  <div class="container">
+    <div class="logo">
+      <img th:src="@{/images/logo.png}" alt="로고" />
+    </div>
+    <h1>한잔하酒</h1>
+    <p class="subtitle">기분이나 상황에 맞는 술집을 매칭받으세요 :)</p>
+
+    <form th:action="@{/fast-recommend}" method="get" id="recommendForm">
+      <div class="section">
+        <div class="section-title">시/도</div>
+        <div class="tags" id="city">
+          <div class="tag selected">광주광역시</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">구</div>
+        <div class="tags" id="districts">
+          <div class="tag">동구</div>
+          <div class="tag">서구</div>
+          <div class="tag">남구</div>
+          <div class="tag">북구</div>
+          <div class="tag">광산구</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">동</div>
+        <div class="tags" id="neighborhoods">
+          <!-- JS가 여기 채움 -->
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">상황</div>
+        <div class="tags" id="situations">
+          <input type="checkbox" name="tags" value="기념일" id="sit1" class="tag-checkbox"><label for="sit1" class="tag"># 기념일</label>
+          <input type="checkbox" name="tags" value="생일" id="sit2" class="tag-checkbox"><label for="sit2" class="tag"># 생일</label>
+          <input type="checkbox" name="tags" value="회식/단체" id="sit3" class="tag-checkbox"><label for="sit3" class="tag"># 회식 / 단체</label>
+          <input type="checkbox" name="tags" value="데이트/썸" id="sit4" class="tag-checkbox"><label for="sit4" class="tag"># 데이트 / 썸</label>
+          <input type="checkbox" name="tags" value="식사" id="sit5" class="tag-checkbox"><label for="sit5" class="tag"># 식사</label>
+          <input type="checkbox" name="tags" value="혼술" id="sit6" class="tag-checkbox"><label for="sit6" class="tag"># 혼술</label>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">감정</div>
+        <div class="tags" id="emotions">
+          <input type="checkbox" name="tags" value="슬픔" id="emo1" class="tag-checkbox"><label for="emo1" class="tag"># 슬픔</label>
+          <input type="checkbox" name="tags" value="기쁨/신남" id="emo2" class="tag-checkbox"><label for="emo2" class="tag"># 기쁨/신남</label>
+          <input type="checkbox" name="tags" value="고독/감성적" id="emo3" class="tag-checkbox"><label for="emo3" class="tag"># 고독/감성적</label>
+          <input type="checkbox" name="tags" value="설렘/기대" id="emo4" class="tag-checkbox"><label for="emo4" class="tag"># 설렘 / 기대</label>
+          <input type="checkbox" name="tags" value="지루함/심심함" id="emo5" class="tag-checkbox"><label for="emo5" class="tag"># 지루함/심심함</label>
+          <input type="checkbox" name="tags" value="분노/스트레스" id="emo6" class="tag-checkbox"><label for="emo6" class="tag"># 분노/스트레스</label>
+          <input type="checkbox" name="tags" value="평범함/보통" id="emo7" class="tag-checkbox"><label for="emo7" class="tag"># 평범함/보통</label>
+        </div>
+      </div>
+
+      <button type="submit" id="submit-btn" class="button">술집 찾기</button>
+    </form>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const districtDongMap = {
+          "동구": ["충장로", "계림동", "산수동", "학동", "지산동", "지원동", "운림동", "용산동", "금남로", "동명동"],
+          "서구": ["화정동", "쌍촌동", "풍암동", "치평동", "내방동", "농성동"],
+          "남구": ["봉선동", "주월동", "진월동", "백운동", "방림동"],
+          "북구": ["문흥동", "두암동", "일곡동", "용봉동", "운암동", "각화동"],
+          "광산구": ["첨단동", "운남동", "신창동", "수완동", "장덕동", "월계동", "우산동"]
+        };
+
+        // 구 클릭 시 동 갱신
+        document.querySelectorAll("#districts .tag").forEach(tag => {
+          tag.addEventListener("click", () => {
+            document.querySelectorAll("#districts .tag").forEach(t => t.classList.remove("selected"));
+            tag.classList.add("selected");
+
+            const selectedGu = tag.textContent.trim();
+            const neighborhoods = districtDongMap[selectedGu] || [];
+
+            const container = document.getElementById("neighborhoods");
+            container.innerHTML = "";
+            neighborhoods.forEach(dong => {
+              const div = document.createElement("div");
+              div.className = "tag";
+              div.textContent = dong;
+              div.addEventListener("click", () => {
+                document.querySelectorAll("#neighborhoods .tag").forEach(t => t.classList.remove("selected"));
+                div.classList.add("selected");
+              });
+              container.appendChild(div);
+            });
+          });
+        });
+
+        // form 제출 시 dong, emotion, situation만 전달
+        const form = document.getElementById("recommendForm");
+        form.addEventListener("submit", (event) => {
+          // 이미 추가된 hidden input 제거
+          Array.from(form.querySelectorAll("input[type='hidden']")).forEach(el => el.remove());
+
+          // 동 (dong)
+          const selectedDong = document.querySelector("#neighborhoods .selected");
+          const dongInput = document.createElement("input");
+          dongInput.type = "hidden";
+          dongInput.name = "dong";
+          dongInput.value = selectedDong ? selectedDong.textContent.trim() : "";
+          form.appendChild(dongInput);
+
+          // 감정 (emotion)
+          const emotion = document.querySelector("#emotions input[type='checkbox']:checked");
+          const emotionInput = document.createElement("input");
+          emotionInput.type = "hidden";
+          emotionInput.name = "emotion";
+          emotionInput.value = emotion ? emotion.value : "";
+          form.appendChild(emotionInput);
+
+          // 상황 (situation)
+          const situation = document.querySelector("#situations input[type='checkbox']:checked");
+          const situationInput = document.createElement("input");
+          situationInput.type = "hidden";
+          situationInput.name = "situation";
+          situationInput.value = situation ? situation.value : "";
+          form.appendChild(situationInput);
+
+          // 동 선택 안 했을 때 경고
+          if (!dongInput.value) {
+            alert("동을 반드시 선택하세요.");
+            event.preventDefault();
+            return false;
+          }
+        });
+      });
+    </script>
+  </div>
+</body>
+</html>

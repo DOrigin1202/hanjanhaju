@@ -1,0 +1,111 @@
+@charset "UTF-8";
+:root {
+        --bg-color: #ffffff;
+        --tag-bg: #f0f0f0;
+        --tag-active: #222;
+        --tag-active-text: #fff;
+        --section-bg: #f9f9f9;
+        --text-color: #111;
+        --accent-color: #ff914d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Pretendard", "Noto Sans KR", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        background-color: #1a1826;
+        color: white;
+        padding: 16px 20px;
+        font-size: 1.1rem;
+        font-weight: bold;
+      }
+
+      .back-btn {
+        margin-right: 12px;
+        font-size: 1.3rem;
+        cursor: pointer;
+      }
+
+      .mypage-btn {
+        margin-left: auto;
+        font-size: 0.95rem;
+        cursor: pointer;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+        text-align: center;
+        margin: 20px 0 10px;
+      }
+
+      .filters {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+        color: #555;
+      }
+
+      .store {
+        position: relative;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 16px;
+        margin: 16px 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+        transition: background-color 0.2s;
+        background-color: var(--section-bg);
+      }
+
+      .store:hover {
+        background-color: #f0f0f0;
+      }
+
+      .store h2 {
+        margin: 0 0 8px;
+        font-size: 1.2rem;
+        color: var(--accent-color);
+      }
+
+      .store p {
+        margin: 4px 0;
+        font-size: 0.95rem;
+      }
+
+      .tags {
+        margin-top: 10px;
+      }
+
+      .tags span {
+        display: inline-block;
+        background: #e7e7e7;
+        border-radius: 10px;
+        padding: 4px 10px;
+        margin: 2px;
+        font-size: 0.85rem;
+      }
+
+      .loading {
+        text-align: center;
+        margin: 20px 0;
+        color: #999;
+      }
+
+      .like-button {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        user-select: none;
+        color: red;
+      }

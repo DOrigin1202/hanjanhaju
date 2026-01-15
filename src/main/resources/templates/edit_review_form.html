@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>리뷰 수정</title>
+</head>
+<body>
+    <h2>리뷰 수정</h2>
+    <p><strong th:text="${review.store.storeName}"></strong> 가게에 대한 리뷰를 수정합니다.</p>
+
+    <form th:action="@{/reviews/update}" method="post">
+        <!-- 어떤 리뷰를 수정할지 알려주기 위해 reviewId를 숨겨서 전달 -->
+        <input type="hidden" name="reviewId" th:value="${review.review_id}" />
+        
+        <div>
+            <textarea name="content" rows="4" cols="50" required th:text="${review.content}"></textarea>
+        </div>
+        <br>
+        <button type="submit">수정 완료</button>
+    </form>
+    <a th:href="@{/store/{id}(id=${review.store.storeId})}">취소하고 돌아가기</a>
+</body>
+</html>

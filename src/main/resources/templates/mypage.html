@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>마이페이지</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Pretendard", "Noto Sans KR", sans-serif;
+      background-color: #fff;
+      color: #111;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      background-color: #1a1826;
+      color: white;
+      padding: 16px 20px;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .back-btn {
+      margin-right: 12px;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+
+    .profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 30px 0 20px;
+    }
+
+    .profile-img {
+      width: 70px;
+      height: 70px;
+      background-color: #ccc;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+
+    .nickname {
+      font-weight: bold;
+    }
+
+    .info-box {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .info-box div {
+      background-color: #eee;
+      padding: 12px 24px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .info-box p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #444;
+    }
+
+    .info-box strong {
+      display: block;
+      font-size: 1.2rem;
+      margin-top: 4px;
+    }
+
+    .menu-box {
+      margin: 0 16px;
+    }
+
+    .menu {
+      background-color: #eee;
+      padding: 14px 20px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .menu:hover {
+      background-color: #e2e2e2;
+    }
+    
+    .logout-btn {
+  margin-left: auto;
+  font-size: 0.95rem;
+  color: #fff;
+  cursor: pointer;
+}
+.logout-btn:hover {
+  text-decoration: underline;
+}
+    
+  </style>
+</head>
+<body>
+  <header>
+    <div class="back-btn" th:onclick="|location.href='@{/recommend}'|">←</div>
+    마이페이지
+    <div class="logout-btn" onclick="logout()">로그아웃</div>
+  </header>
+
+  <div class="profile">
+    <div class="profile-img"></div>
+    <!-- 실제 닉네임 표시 -->
+    <div class="nickname" th:text="${user.nickname}">닉네임</div>
+  </div>
+
+  <div class="info-box">
+    <div>
+      <p>작성한 리뷰</p>
+      <!-- ★★★ 실제 리뷰 리스트의 크기로 개수 표시 ★★★ -->
+      <strong id="review-count" th:text="${#lists.size(myReviews)}">0</strong>
+    </div>
+    <div>
+      <p>찜한 장소</p>
+      <!-- ★★★ 실제 찜 목록 리스트의 크기로 개수 표시 ★★★ -->
+      <strong id="like-count" th:text="${#lists.size(myWishlist)}">0</strong>
+    </div>
+  </div>
+
+  <div class="menu-box">
+    <div class="menu" th:onclick="|location.href='@{/myreviews}'|">작성한 리뷰 보기 <span>›</span></div>
+    <div class="menu" th:onclick="|location.href='@{/wishlist/mine}'|">찜한 장소 <span>›</span></div>
+  </div>
+	
+	
+	<!-- ★★★ 로그아웃 기능을 위한 스크립트 추가 ★★★ -->
+  <script>
+    function logout() {
+      // 사용자에게 정말 로그아웃할 것인지 한번 더 확인합니다.
+      if (confirm("정말 로그아웃 하시겠습니까?")) {
+        // "예"를 누르면 서버의 /logout 경로로 페이지를 이동시킵니다.
+        window.location.href = '/logout';
+      }
+    }
+  </script>
+  
+</body>
+</html>

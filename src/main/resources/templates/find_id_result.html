@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이메일 찾기 결과 - 한잔하주(酒)</title>
+    <style>
+      /* CSS는 그대로 유지합니다. */
+      :root {
+        --bg-color: #1d1c2b;
+        --button-color: #ff914d;
+        --button-hover: #ff7a26;
+      }
+      body { margin: 0; background-color: var(--bg-color); font-family: "Pretendard", "Noto Sans KR", sans-serif; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; }
+      .container { text-align: center; }
+      .title { font-size: 1.8rem; margin-bottom: 20px; }
+      .email-result { background-color: #3a3946; padding: 16px 24px; border-radius: 12px; font-size: 1.2rem; font-weight: bold; color: #ffd43b; margin-bottom: 30px; }
+      .error-message { background-color: #4f3333; padding: 16px 24px; border-radius: 12px; font-size: 1.1rem; color: #ffacac; margin-bottom: 30px; }
+      button { background-color: var(--button-color); border: none; padding: 12px 24px; border-radius: 12px; font-size: 1rem; color: white; font-weight: bold; cursor: pointer; }
+      button:hover { background-color: var(--button-hover); }
+      .link-group a { color: #ccc; text-decoration: none; margin: 0 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ★★★ 컨트롤러에서 받은 foundEmail 또는 errorMessage에 따라 다른 내용을 표시합니다. ★★★ -->
+
+        <!-- 1. 이메일을 성공적으로 찾았을 경우 -->
+        <div th:if="${foundEmail}">
+            <div class="title">찾으신 이메일입니다</div>
+            <div class="email-result" th:text="${foundEmail}">이메일 주소</div>
+            <button th:onclick="|location.href='@{/login}'|">로그인하러 가기</button>
+        </div>
+
+        <!-- 2. 정보를 찾지 못했을 경우 -->
+        <div th:if="${errorMessage}">
+            <div class="title">요청 실패</div>
+            <div class="error-message" th:text="${errorMessage}">오류 메시지</div>
+            <button th:onclick="|history.back()|">다시 시도하기</button>
+        </div>
+        
+        <div class="link-group" style="margin-top: 20px;">
+            <a th:href="@{/find/pw}">비밀번호 재설정</a>|
+            <a th:href="@{/start}">시작화면으로</a>
+        </div>
+    </div>
+
+    <!-- ★★★ JavaScript 부분은 완전히 삭제합니다. ★★★ -->
+</body>
+</html>

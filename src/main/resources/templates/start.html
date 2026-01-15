@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>한잔하주(酒) 시작화면</title>
+<style>
+:root {
+	--bg-color: #1d1c2b;
+	--yellow: #ffd43b;
+	--gray: #3a3946;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background-color: var(--bg-color);
+	color: white;
+	font-family: "Pretendard", "Noto Sans KR", sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	padding: 20px;
+}
+
+.container {
+	width: 100%;
+	max-width: 400px;
+	text-align: center;
+	position: relative;
+}
+
+.logo-img {
+	width: 200px;
+	height: 200px;
+}
+
+.title {
+	font-size: 2.5rem;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.subtitle {
+	font-size: 1rem;
+	color: #ccc;
+	margin-bottom: 40px;
+}
+
+.buttons {
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+	margin-bottom: 20px;
+}
+
+.btn {
+	flex: 1;
+	padding: 12px 0;
+	border: none;
+	border-radius: 25px;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: transform 0.2s;
+}
+
+.btn:hover {
+	transform: scale(0.98);
+}
+
+.btn-guest {
+	background-color: var(--gray);
+	color: white;
+}
+
+.btn-member {
+	background-color: var(--yellow);
+	color: black;
+	font-weight: bold;
+}
+
+.signup {
+	font-size: 0.9rem;
+	color: #aaa;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+@media ( max-width : 480px) {
+	.title {
+		font-size: 1.6rem;
+	}
+	.btn {
+		font-size: 0.95rem;
+		padding: 10px 0;
+	}
+}
+
+@media ( min-width : 481px) and (max-width: 1024px) {
+	.container {
+		max-width: 500px;
+	}
+	.title {
+		font-size: 2.2rem;
+	}
+}
+
+@media ( min-width : 1025px) {
+	.container {
+		max-width: 600px;
+	}
+	.title {
+		font-size: 2.5rem;
+	}
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<img th:src="@{/images/한잔하주_logochar(흰색).png}"
+		alt="와인 아이콘"
+		class="logo-img" />
+		<!-- 이미지 경로도 Thymeleaf로 수정 -->
+		
+		<div class="title">한잔하주(酒)</div>
+		<div class="subtitle">감정을 마시다, 분위기를 느끼다</div>
+
+		<div class="buttons">
+			<!-- ★★★ 버튼에 data-url 속성 추가 ★★★ -->
+			<button class="btn btn-guest" th:data-url="@{/main}"
+				onclick="location.href=this.dataset.url">게스트</button>
+
+			<button class="btn btn-member" th:data-url="@{/login}"
+				onclick="location.href=this.dataset.url">회원</button>
+		</div>
+
+		<!-- ★★★ 회원가입 링크도 수정 ★★★ -->
+		<div class="signup" th:data-url="@{/register}"
+			onclick="location.href=this.dataset.url" style="cursor: pointer;">회원가입</div>
+	</div>
+
+	<!-- 
+    이제 별도의 <script> 태그가 필요 없습니다!
+    모든 이동은 각 버튼의 onclick 속성에서 직접 처리됩니다.
+  -->
+</body>
+</html>

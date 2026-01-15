@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>이메일 / 비밀번호 찾기</title>
+    <style>
+      :root {
+        --bg-color: #1d1c2b;
+        --button-color: #ff914d;
+        --button-hover: #ff7a26;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: white;
+        font-family: "Pretendard", "Noto Sans KR", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+        margin: 0;
+        text-align: center;
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.4rem;
+        margin-bottom: 30px;
+      }
+
+      .btn {
+        background-color: var(--button-color);
+        border: none;
+        border-radius: 16px;
+        padding: 14px 24px;
+        margin: 10px 0;
+        font-size: 1rem;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        width: 240px;
+        max-width: 80%;
+      }
+
+      .btn:hover {
+        background-color: var(--button-hover);
+      }
+
+      .back-btn {
+        margin-top: 20px;
+        font-size: 0.85rem;
+        color: #ccc;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+
+      .back-btn:hover {
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>어떤 정보를 찾고 싶으신가요?</h1>
+
+    <button class="btn" th:onclick="|location.href='@{/find/id}'|">이메일 찾기</button>
+    <button class="btn" th:onclick="|location.href='@{/find/pw}'|">비밀번호 재설정</button>
+
+    <div class="back-btn" th:onclick="|location.href='@{/login}'|">로그인으로 돌아가기</div>
+  </body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title th:text="${store.shopName} + ' - 상세 정보'">술집 상세 정보</title>
+<link rel="stylesheet" th:href="@{/css/detail.css}" />
+<style>
+body {
+    background: #23233a;
+    color: #eee;
+    font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+    margin: 0;
+}
+header {
+    background: #1d1c2b;
+    padding: 22px 0 16px 0;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+h1 {
+    color: #fff;
+}
+.detail {
+    max-width: 650px;
+    margin: 32px auto 0 auto;
+    background: #272845;
+    border-radius: 20px;
+    box-shadow: 0 4px 28px rgba(0,0,0,0.16);
+    padding: 34px 38px 18px 38px;
+}
+.like-btn { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+.like-btn button {
+    font-size: 1.2rem;
+    background: #23233a;
+    color: #ff914d;
+    border: 1.5px solid #ff914d;
+    border-radius: 16px;
+    padding: 7px 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.13s, color 0.13s;
+}
+.like-btn button:hover { background: #ff914d; color: #fff; }
+h2 { margin: 0 0 12px 0; font-size: 1.7rem; color: #ffd46b; font-weight: bold; }
+.detail p { font-size: 1.1rem; margin-bottom: 12px; color: #ccc; }
+#map {
+    width: 100%;
+    height: 390px;    /* 지도 더 크게 */
+    border-radius: 13px;
+    margin: 23px 0 0 0;
+    background: #181828;
+    border: 1px solid #37384b;
+}
+hr {
+    margin: 40px 0 28px 0;
+    border: none;
+    border-top: 1.5px solid #34344c;
+}
+.review-section {
+    max-width: 650px;
+    margin: 0 auto 0 auto;
+    background: #252548;
+    border-radius: 16px;
+    box-shadow: 0 2px 18px rgba(0,0,0,0.11);
+    padding: 20px 28px 14px 28px;
+}
+.review-section h3 { font-size: 1.13rem; color: #ff914d; font-weight: bold; margin-bottom: 18px; }
+.review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.review-item {
+    display: flex;
+    align-items: center;
+    background: #28294e;
+    border-radius: 11px;
+    padding: 13px 16px;
+    font-size: 1.08rem;
+    color: #fafafa;
+}
+.review-author {
+    color: #ffd46b;
+    font-weight: bold;
+    margin-right: 13px;
+}
+.review-content {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.review-actions {
+    margin-left: 10px;
+    display: flex;
+    gap: 6px;
+}
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 3px 5px;
+    font-size: 1.08rem;
+    color: #ff914d;
+    border-radius: 5px;
+    transition: background 0.13s;
+}
+.icon-btn:hover {
+    background: #ff914d;
+    color: #fff;
+}
+.review-form-section {
+    max-width: 650px;
+    margin: 24px auto 0 auto;
+    background: #252548;
+    border-radius: 16px;
+    box-shadow: 0 2px 18px rgba(0,0,0,0.11);
+    padding: 23px 28px 17px 28px;
+}
+.review-form-section h3 { font-size: 1.08rem; color: #ff914d; font-weight: bold; margin-bottom: 12px; }
+.review-form {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+.review-form textarea {
+    flex: 1;
+    min-height: 40px;
+    border-radius: 12px;
+    border: none;
+    padding: 10px 13px;
+    font-size: 1.05rem;
+    background: #21233b;
+    color: #fff;
+    resize: none;
+    transition: box-shadow 0.13s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+}
+.review-form textarea:focus { outline: none; box-shadow: 0 0 0 2px #ff914d55; }
+.review-form button {
+    background: #ff914d;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 1.07rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.14s;
+}
+.review-form button:hover { background: #ff7a26; }
+@media (max-width: 750px) {
+    .detail, .review-section, .review-form-section { max-width: 99vw; padding: 9px 3vw; }
+    #map { height: 220px; }
+}
+</style>
+<!-- RemixIcon CDN(무료 아이콘 폰트, 수정/삭제) -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+<header>
+	<div th:if ="${session.loginUser != null}">
+	<form th:action="@{/logout}" method="get" class="logout-form">
+        <button type="submit" class="logout-btn">로그아웃</button>
+    </form>
+    </div>
+    <div th:if ="${session.loginUser == null}">
+	<form th:action="@{/login}" method="get" class="logout-form">
+        <button type="submit" class="logout-btn">로그인</button>
+    </form>
+    </div>
+    
+    <div class="back-btn" onclick="history.back()">←</div>
+    <h1>술집 상세</h1>
+</header>
+<div class="detail" id="store-detail">
+    <div class="like-btn" th:if="${session.loginUser != null}">
+        <form th:action="@{/wishlist/add}" method="post" th:if="${!store.wishlisted}">
+            <input type="hidden" name="storeId" th:value="${store.storeId}" />
+            <button type="submit">♡ 찜하기</button>
+        </form>
+        <form th:action="@{/wishlist/remove}" method="post" th:if="${store.wishlisted}">
+            <input type="hidden" name="storeId" th:value="${store.storeId}" />
+            <button type="submit">♥ 찜취소</button>
+        </form>
+    </div>
+    <h2 th:text="${store.shopName}">가게 이름</h2>
+    <p><strong>위치:</strong> <span th:text="${store.address}"></span></p>
+    <div id="map"></div>
+</div>
+<hr>
+<div class="review-section">
+    <h3>리뷰 목록</h3>
+    <div class="review-list">
+        <div class="review-item" th:each="review : ${reviews}">
+            <span class="review-author" th:if="${review.member != null}" th:text="${review.member.nickname}">닉네임</span>
+            <span class="review-author" th:if="${review.member == null}">알수없음</span>
+            <span class="review-content" th:text="${review.content}"></span>
+            <!-- 수정/삭제 버튼 (null 체크) -->
+        <span class="review-actions" th:if="${session.loginUser != null and review.member != null and session.loginUser.email == review.member.email}">
+            <a th:href="@{/reviews/edit/{id}(id=${review.review_id})}" class="icon-btn" title="수정">
+                <i class="ri-edit-2-line"></i>
+            </a>
+                <form th:action="@{/reviews/delete}" method="post" style="display:inline;" onsubmit="return confirm('정말 이 리뷰를 삭제하시겠습니까?');">
+                    <input type="hidden" name="reviewId" th:value="${review.review_id}" />
+                    <input type="hidden" name="storeId" th:value="${review.store.storeId}" />
+                    <button type="submit" class="icon-btn" title="삭제"><i class="ri-delete-bin-6-line"></i></button>
+                </form>
+            </span>
+        </div>
+        <div th:if="${#lists.isEmpty(reviews)}" style="color:#aaa;text-align:center; font-size:1.02rem;">아직 작성된 리뷰가 없습니다.</div>
+    </div>
+</div>
+<hr>
+<div class="review-form-section">
+    <h3>리뷰 남기기</h3>
+    <div th:if="${session.loginUser != null}">
+        <form th:action="@{/reviews/add}" method="post" class="review-form">
+            <input type="hidden" name="storeId" th:value="${store.storeId}" />
+            <textarea name="content" placeholder="리뷰를 남겨주세요." required maxlength="100"></textarea>
+            <button type="submit">등록</button>
+        </form>
+    </div>
+    <div th:if="${session.loginUser == null}" style="text-align:center;">
+        <p><a th:href="@{/login}" style="color:#ffd46b;text-decoration:underline;">로그인</a> 후 리뷰를 작성할 수 있습니다.</p>
+    </div>
+</div>
+<!-- 카카오 지도 API -->
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=e09b45afe63ebfc9be8265bba5506f8f"></script>
+<script th:inline="javascript">
+document.addEventListener('DOMContentLoaded', function(){
+    const lat = /*[[${store.lat}]]*/0;
+    const lng = /*[[${store.lng}]]*/0;
+    const shopName = /*[['${store.shopName}']]*/"상점명";
+    const container = document.getElementById('map');
+    const options = {
+        center: new kakao.maps.LatLng(lat, lng),
+        level: 3
+    };
+    const map = new kakao.maps.Map(container, options);
+    const marker = new kakao.maps.Marker({
+        position: new kakao.maps.LatLng(lat, lng)
+    });
+    marker.setMap(map);
+    const infowindow = new kakao.maps.InfoWindow({
+        content: `<div style="padding:5px;font-size:14px;color:#ff914d;font-weight:bold;">${shopName}</div>`
+    });
+    infowindow.open(map, marker);
+});
+</script>
+</body>
+</html>

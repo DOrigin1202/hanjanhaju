@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>작성한 리뷰 보기</title>
+  <link rel="stylesheet" th:href="@{/css/myreviews.css}" />
+  <!-- ★★★ 불필요한 myreviews.js 링크는 완전히 삭제했습니다. ★★★ -->
+  <style>
+    /* CSS는 헤드에 직접 포함하거나 외부 파일로 분리할 수 있습니다. */
+    body { margin: 0; font-family: "Pretendard", "Noto Sans KR", sans-serif; background-color: #fffdfa; color: #111; }
+    header { background-color: #1e1d2b; color: white; padding: 16px; font-size: 1.1rem; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+    .back-btn { font-size: 1.2rem; cursor: pointer; }
+    h1 { font-size: 1.5rem; text-align: center; margin: 20px; }
+    .review { border: 1px solid #ddd; border-radius: 10px; padding: 16px; margin: 16px 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); }
+    .review h2 { margin: 0 0 8px; font-size: 1.1rem; }
+    .review p { font-size: 0.95rem; margin: 6px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- ★★★ 뒤로가기 버튼은 마이페이지로 이동하도록 수정 ★★★ -->
+    <div class="back-btn" th:onclick="|location.href='@{/mypage}'|">←</div>
+    <div>작성한 리뷰</div>
+  </header>
+
+  <h1>내가 작성한 리뷰</h1>
+
+  <!-- ★★★ 컨트롤러에서 받은 myReviews로 실제 리뷰 목록을 동적으로 생성 ★★★ -->
+  <div id="review-list">
+    <!-- 리뷰 목록이 비어있지 않은 경우 -->
+    <div th:if="${!#lists.isEmpty(myReviews)}">
+      <div class="review" th:each="review : ${myReviews}">
+        <!-- ReviewEntity에 store 필드가 있으므로, 가게 이름에 접근 가능 -->
+        <h2 th:text="${review.store.store_name}">술집 이름</h2>
+        <!-- ReviewEntity에 createdAt 필드가 있다면 날짜 표시 가능 -->
+        <!-- <p><strong>날짜:</strong> <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd')}"></span></p> -->
+        <p th:text="${review.content}">리뷰 내용</p>
+        <!-- 리뷰 수정/삭제 버튼 등 추가 기능 구현 가능 -->
+      </div>
+    </div>
+
+    <!-- 리뷰 목록이 비어있는 경우 -->
+    <div th:if="${#lists.isEmpty(myReviews)}">
+      <p style="text-align: center;">아직 작성한 리뷰가 없습니다.</p>
+    </div>
+  </div>
+
+</body>
+</html>
